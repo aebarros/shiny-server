@@ -18,7 +18,7 @@ head(data)
 polygon.gps=read.table("data/PolygonGPS.txt", header=T, sep="\t")
 species.info=read.table("data/tblSpeciesLookup.txt", header=T, sep="\t")
 station.info=read.table("data/tblStationRegions.txt", header=T, sep="\t")
-larval.data=read.table("data/larvaldata.txt", header=T, sep="\t")
+larval.data=readRDS("data/larvaldata.rds")
 
 
 ##Clean Data##
