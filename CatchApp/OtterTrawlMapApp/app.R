@@ -60,6 +60,7 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                             )
 ))
 server <- function(input, output, session) {
+  options(shiny.sanitize.errors = FALSE)
   ###########Interactive Map##############################################
   # Reactive expression used to filter out by user selected variables for final data "filtered()"
 
