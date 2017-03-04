@@ -64,7 +64,7 @@ head(data.cpue)
 data.cpue$All=rowSums(data.cpue[,47:110], na.rm=T)
 head(data.cpue)
 #rearrange order#
-data.cpue = data.cpue[, c(1:46,119, 47:118)]
+data.cpue = data.cpue[, c(1:46,129, 47:128)]
 
 
 #change month from number to month name#
