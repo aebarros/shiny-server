@@ -54,7 +54,7 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                  selectInput("region","Region",
                                              c(unique(as.character(data.cpue.melt$Bay.Region)),"All")),
                                  selectInput("method","Gear Type",gear),
-                                 downloadButton('html_link','Download map'),
+                                 #downloadButton('html_link','Download map'),
                                  submitButton("Submit"))
                    ),
                   #2nd tab
