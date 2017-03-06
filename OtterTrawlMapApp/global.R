@@ -22,6 +22,8 @@ larval.data=readRDS("data/larvaldata.rds")
 
 
 ##Clean Data##
+#format dates#
+data$Date <- as.Date(data$Date , "%m/%d/%Y")
 #join data#
 data=data%>%
   rbind.fill(data,larval.data)
@@ -31,8 +33,7 @@ data=data%>%
   inner_join(data.location)
 head(data)
 
-#format dates#
-data$Date <- as.Date(data$Date , "%m/%d/%Y")
+
 #order dates and add month/year columns#
 data[order(data$Date, decreasing=TRUE ),]
 data<-data%>%
@@ -109,7 +110,6 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 
 ###data debugging###
-data.debug=data.clean%>%
-  filter(Method=="SLS")%>%
-  filter(Polygon.Station=="NB-630")%>%
-  filter(Date=="2015-02-15")
+data.debug=data%>%
+  filter(Method=="SLS")
+
