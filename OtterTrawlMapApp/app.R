@@ -51,8 +51,8 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                                 unique(as.character(data.cpue.melt$CommonName))),
                                  dateRangeInput("dates","Date range", start="2015-01-01", end="2015-01-31"),
                                  textOutput("DateRange"),
-                                 selectInput("region","Region",
-                                             c(unique(as.character(data.cpue.melt$Bay.Region)),"All")),
+                                 selectInput("agency","Agency",
+                                             c(unique(as.character(data.cpue.melt$Department)),"All")),
                                  selectInput("method","Gear Type",gear),
                                  #downloadButton('html_link','Download map'),
                                  submitButton("Submit"))
@@ -82,8 +82,8 @@ server <- function(input, output, session) {
   #Reactive expression used to filter out by user selected variables for final data "filtered()"
   #for map generation
   filtered<-reactive({
-    ifelse(input$region=="All",filtered.region<-data.cpue.melt,filtered.region<-data.cpue.melt[data.cpue.melt$Bay.Region==input$region,])
-    filtered.species<- filtered.region[filtered.region$CommonName==input$species,]
+    ifelse(input$agency=="All",filtered.agency<-data.cpue.melt,filtered.agency<-data.cpue.melt[data.cpue.melt$Department==input$agency,])
+    filtered.species<- filtered.agency[filtered.agency$CommonName==input$species,]
     filtered.gear<-filtered.species[filtered.species$Method==input$method,]
     filtered.dates<-filtered.gear[filtered.gear$Date>=input$dates[1] & filtered.gear$Date<=input$dates[2],]
     ##take averages of data in date range
@@ -98,7 +98,9 @@ server <- function(input, output, session) {
   #produces base map
   mymap <- reactive({
     leaflet(filtered()) %>% addProviderTiles("Hydda.Base")%>%
-      fitBounds(~min(longitude)-.005, ~min(latitude)-.005, ~max(longitude)+.005, ~max(latitude)+.005)
+      #turning off fitbounds so that map doesn't crash when non used gear type is selected
+      #fitBounds(~min(longitude)-.005, ~min(latitude)-.005, ~max(longitude)+.005, ~max(latitude)+.005)
+      setView(lng = -122.40, lat = 37.85, zoom = 9)
   })
   #renders map for main panel in ui
   output$map <- renderLeaflet({
@@ -171,8 +173,8 @@ server <- function(input, output, session) {
  )
  ###############Data Explorer##########
  filtered2<-reactive({
-   ifelse(input$region2=="All",filtered.region2<-data.cpue.melt,filtered.region2<-data.cpue.melt[data.cpue.melt$Bay.Region==input$region2,])
-   filtered.species2<- filtered.region2[filtered.region2$CommonName==input$species2,]
+   ifelse(input$agency2=="All",filtered.agency2<-data.cpue.melt,filtered.agency2<-data.cpue.melt[data.cpue.melt$Department==input$agency2,])
+   filtered.species2<- filtered.agency2[filtered.agency2$CommonName==input$species2,]
    filtered.gear2<-filtered.species2[filtered.species2$Method==input$method,]
    filtered.dates2<-filtered.species2[filtered.species2$Date>=input$dates2[1] & filtered.species2$Date<=input$dates2[2],]
    ##take averages data in date range

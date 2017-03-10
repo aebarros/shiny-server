@@ -59,7 +59,7 @@
 "MINSPP"	"unidentified minnow"		"Cyprinidae"	"F"	"Unknown"	"Fish"
 "MISSIL"	"Mississippi silverside"	"Menidia audens"	"Atherinopsidae"	"F"	"Invasive"	"Fish"
 "MUSBLE"	"mussel blenny"	"Hypsoblennius jenkinsi"	"Blenniidae"	"F"	"Native"	"Fish"
-"NORANC"	"Northern anchovy"	"Engraulis mordax"	"Engraulidae"	"F"	"Native"	"Fish"
+"NORANC"	"northern anchovy"	"Engraulis mordax"	"Engraulidae"	"F"	"Native"	"Fish"
 "NIGSME"	"night smelt"	"Spirinchus starksi"	"Osmeridae"	"F"	"Native"	"Fish"
 "ONEFRI"	"onespot fringehead"	"Neoclinus uninotatus"	"Chaenopsidae"	"F"	"Native"	"Fish"
 "PACERA"	"Pacific electric ray"	"Torpedo californica"	"Torpedinidae"	"F"	"Native"	"Fish"

@@ -19,6 +19,7 @@ polygon.gps=read.table("data/PolygonGPS.txt", header=T, sep="\t")
 species.info=read.table("data/tblSpeciesLookup.txt", header=T, sep="\t")
 station.info=read.table("data/tblStationRegions.txt", header=T, sep="\t")
 larval.data=readRDS("data/larvaldata.rds")
+dataDFW=readRDS("data/dataDFW.rds")
 
 
 ##Clean Data##
@@ -88,11 +89,22 @@ data.cpue.melt=data.cpue.melt%>%
   inner_join(species.info)
 head(data.cpue.melt)
 
+#add in research group name#
+data.cpue.melt$Department <- rep("Hobbs Lab",nrow(data.cpue.melt)) # make new column 
+
+########ADD In DFW data
+data.cpue.melt=data.cpue.melt%>%
+  rbind.fill(data.cpue.melt,dataDFW)
+head(data.cpue.melt)
+
+#order by common name
+data.cpue.melt=data.cpue.melt[order(data.cpue.melt$CommonName),]
+
 #change NA values to 0#
 data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 #average CPUE by month, year and station#
-#not using this anymore due to changing the date system
+#####not using this anymore due to changing the date system
 #data.melt.average=data.cpue.melt%>%
   #group_by_("month","Bay.Region","monthname","year","Polygon.Station","latitude","longitude","CommonName","NatInv")%>%
   #summarise(CPUE=mean(CPUE,na.rm=TRUE), BegSurfSalin=mean(BegSurfSalin,na.rm=TRUE), BegSurfTemp=mean(BegSurfTemp, na.rm=TRUE), 
@@ -110,6 +122,6 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 
 ###data debugging###
-data.debug=data%>%
-  filter(Method=="SLS")
+data.debug=data.cpue.melt%>%
+  filter(Department=="CDFW")
 
