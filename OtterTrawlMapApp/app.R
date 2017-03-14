@@ -96,15 +96,18 @@ server <- function(input, output, session) {
   })
   
   #produces base map
-  mymap <- reactive({
-    leaflet(filtered()) %>% addProviderTiles("Hydda.Base")%>%
-      #turning off fitbounds so that map doesn't crash when non used gear type is selected
-      #fitBounds(~min(longitude)-.005, ~min(latitude)-.005, ~max(longitude)+.005, ~max(latitude)+.005)
+  mymap1 <- reactive({
+    leaflet(filtered())%>% addProviderTiles("Hydda.Base")%>%
+      fitBounds(~min(longitude)-.005, ~min(latitude)-.005, ~max(longitude)+.005, ~max(latitude)+.005)
+  })
+  #map2 is used if no data fits selected parameters, and will be blank
+  mymap2 <- reactive({
+    leaflet()%>% addProviderTiles("Hydda.Base")%>%
       setView(lng = -122.40, lat = 37.85, zoom = 9)
   })
-  #renders map for main panel in ui
+  #renders map for main panel in ui using an if function to create map fitting parameters
   output$map <- renderLeaflet({
-    mymap()
+    if(nrow(filtered())==0){mymap2()}else{mymap1()}
   })
 
   ##Provides date range count
