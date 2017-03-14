@@ -123,8 +123,5 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 ###data debugging###
 data.debug=data.cpue.melt%>%
-  filter(Department=="Hobbs Lab")%>%
-  filter(Method=="20mm")%>%
-  filter(Date=="10-1-12")
-nrow(data.debug)
-
+  filter(Department=="CDFW")
+head(data.debug)
