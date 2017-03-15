@@ -123,8 +123,5 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 ###data debugging###
 data.debug=data.cpue.melt%>%
-  filter(Department=="CDFW")%>%
-  filter(Method=="LOT")%>%
-  filter(CommonName=="northern anchovy")%>%
-  filter(CPUE>0)
+  filter(Department=="CDFW")
 head(data.debug)
