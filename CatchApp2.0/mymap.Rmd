@@ -1,0 +1,13 @@
+---
+title: "Catch Map"
+output: html_document
+---
+##**Species: `r input$species`**
+###**Region: `r input$region`**
+###**Date range: `r input$dates`**
+
+```{r, echo=FALSE, message=FALSE,fig.height=7, fig.width=10, fig.align='center'}
+mymap()%>%myfun
+```
+
+###### Hobbs Lab 2017
