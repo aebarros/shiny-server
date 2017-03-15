@@ -18,10 +18,12 @@ head(data)
 polygon.gps=read.table("data/PolygonGPS.txt", header=T, sep="\t")
 species.info=read.table("data/tblSpeciesLookup.txt", header=T, sep="\t")
 station.info=read.table("data/tblStationRegions.txt", header=T, sep="\t")
-larval.data=read.table("data/larvaldata2.txt", header=T, sep="\t")
+larval.data=readRDS("data/larvaldata.rds")
 
 
 ##Clean Data##
+#format dates#
+data$Date <- as.Date(data$Date , "%m/%d/%Y")
 #join data#
 data=data%>%
   rbind.fill(data,larval.data)
@@ -31,8 +33,6 @@ data=data%>%
   inner_join(data.location)
 head(data)
 
-#format dates#
-data$Date <- as.Date(data$Date , "%m/%d/%Y")
 #order dates and add month/year columns#
 data[order(data$Date, decreasing=TRUE ),]
 data<-data%>%
@@ -64,7 +64,7 @@ head(data.cpue)
 data.cpue$All=rowSums(data.cpue[,47:110], na.rm=T)
 head(data.cpue)
 #rearrange order#
-data.cpue = data.cpue[, c(1:46,119, 47:118)]
+data.cpue = data.cpue[, c(1:46,129, 47:128)]
 
 
 #change month from number to month name#
@@ -109,7 +109,6 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 
 ###data debugging###
-data.debug=data.clean%>%
-  filter(Method=="SLS")%>%
-  filter(Polygon.Station=="NB-630")%>%
-  filter(Date=="2015-02-15")
+data.debug=data%>%
+  filter(Method=="SLS")
+head(data.debug)
