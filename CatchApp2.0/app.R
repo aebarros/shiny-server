@@ -56,26 +56,7 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                  selectInput("method","Gear Type",gear),
                                  #downloadButton('html_link','Download map'),
                                  submitButton("Submit"))
-                   ),
-                  #2nd tab
-                   tabPanel("Data Explorer",
-                            fluidRow(
-                              column(3,
-                                     selectizeInput("species2", "Species",
-                                                    unique(as.character(data.cpue.melt$CommonName))),
-                                     selectInput("agency2","Agency",
-                                                 c(unique(as.character(data.cpue.melt$Department)),"All")),
-                                     dateRangeInput("dates2", "Date range", start="2015-01-01", end="2015-01-31"),
-                                     selectInput("method2","Gear Type",gear),
-                                     textOutput("DateRange2"),
-                                     selectInput("water","Water Parameter",water),
-                                     submitButton("Submit")
-                                     ),
-                              column(9,
-                                     (plotOutput("plot2", height=300)),
-                                     (plotOutput("plot3", height=300))
-                              ))
-                            )
+                   )
 ))
 server <- function(input, output, session) {
   ###########Interactive Map##############################################
@@ -88,10 +69,8 @@ server <- function(input, output, session) {
     filtered.dates<-filtered.gear[filtered.gear$Date>=input$dates[1] & filtered.gear$Date<=input$dates[2],]
     ##take averages of data in date range
     filtered.dates=filtered.dates%>%
-      group_by_("Bay.Region","Polygon.Station","longitude","latitude","CommonName")%>%
-      summarise(CPUE=mean(CPUE,na.rm=TRUE), BegSurfSalin=mean(BegSurfSalin,na.rm=TRUE), BegSurfTemp=mean(BegSurfTemp, na.rm=TRUE), 
-                BegSurfCond=mean(BegSurfCond, na.rm=TRUE),BegSurfDO.=mean(BegSurfDO.,na.rm=TRUE),
-                BegSurfDO.mg.L.=mean(BegSurfDO.mg.L.,na.rm=TRUE))
+      group_by_("Polygon.Station","longitude","latitude","CommonName")%>%
+      summarise(CPUE=mean(CPUE,na.rm=TRUE))
     filtered.date <-  filtered.dates %>% mutate(CPUE = replace(CPUE,CPUE==0,NA))
   })
   
@@ -116,14 +95,7 @@ server <- function(input, output, session) {
           difftime(input$dates[2], input$dates[1], units="days"),
           "days")
   })
-  
-  ##Provides date range count2
-  output$DateRange2 <- renderText({
-    paste("Your date range is", 
-          difftime(input$dates2[2], input$dates2[1], units="days"),
-          "days")
-  })
- 
+
   ##this function used to be an observation, switched to function
   ##in order to allow for downloading in rmarkdown
    myfun <- function(map){
@@ -174,37 +146,6 @@ server <- function(input, output, session) {
      webshot("temp.html", file = file, cliprect = "viewport", delay=2)
    }
  )
- ###############Data Explorer##########
- filtered2<-reactive({
-   ifelse(input$agency2=="All",filtered.agency2<-data.cpue.melt,filtered.agency2<-data.cpue.melt[data.cpue.melt$Department==input$agency2,])
-   filtered.species2<- filtered.agency2[filtered.agency2$CommonName==input$species2,]
-   filtered.gear2<-filtered.species2[filtered.species2$Method==input$method,]
-   filtered.dates2<-filtered.species2[filtered.species2$Date>=input$dates2[1] & filtered.species2$Date<=input$dates2[2],]
-   ##take averages data in date range
- })
- output$plot2<-reactivePlot(function(){
-   p<-ggplot(filtered2(),aes(Polygon.Station,CPUE))+
-   geom_boxplot()+
-     theme_minimal()+
-     ggtitle("Catch")+
-     xlab("station name")+
-     ylab("log10 CPUE (catch per minute tow)")+
-     scale_y_log10()+
-     theme(axis.text.x = element_text(angle = 90, hjust = 1))
-   print(p)
- })
-
- output$plot3<-reactivePlot(function(){
-   q<-ggplot(filtered2(),aes_string(x="Polygon.Station", y=input$water))+
-     geom_boxplot()+
-     theme_minimal()+
-     ggtitle("Water Quality")+
-     xlab("station name")+
-     ylab(input$water)+
-     theme(axis.text.x = element_text(angle = 90, hjust = 1))
-   print(q)
- })
-    
     # MW: Stop shiny app when closing the browser
     session$onSessionEnded(stopApp)
 }

@@ -76,7 +76,7 @@ head(data.cpue)
 ##rearrange in longform using reshape2 melt##
 which(colnames(data.cpue)=="All")
 which(colnames(data.cpue)=="YELSEE")
-data.cpue.melt=melt(data.cpue,id.vars=c("ID","Polygon.Station","Method","BegSurfSalin","BegSurfCond","BegSurfTemp","BegSurfDO.mg.L.","BegSurfDO.","Bay.Region","Date","longitude","latitude","Tributary.Marsh"), measure.vars=c(47:111),
+data.cpue.melt=melt(data.cpue,id.vars=c("ID","Polygon.Station","Method","Date","longitude","latitude"), measure.vars=c(47:111),
                     variable.name="FishCode",
                     value.name="CPUE")
 head(data.cpue.melt)
