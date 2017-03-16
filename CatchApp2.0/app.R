@@ -34,7 +34,7 @@ gear<- c(
 ####Shiny####
 ##UI building
 ui = bootstrapPage(theme = shinytheme("sandstone"),
-                   navbarPage("Bay Area Catch Data",
+                   navbarPage("Bay Area/Delta Catch Data",
                   #1st tab
                    tabPanel("Interactive Map",
                             tags$style(type = "text/css", "html, body {width:100%;height:90%}"),
