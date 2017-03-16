@@ -76,12 +76,12 @@ server <- function(input, output, session) {
   
   #produces base map
   mymap1 <- reactive({
-    leaflet(filtered())%>% addProviderTiles("Hydda.Base")%>%
+    leaflet(filtered())%>% addProviderTiles("Hydda.Full")%>%
       fitBounds(~min(longitude)-.005, ~min(latitude)-.005, ~max(longitude)+.005, ~max(latitude)+.005)
   })
   #map2 is used if no data fits selected parameters, and will be blank
   mymap2 <- reactive({
-    leaflet()%>% addProviderTiles("Hydda.Base")%>%
+    leaflet()%>% addProviderTiles("Hydda.Full")%>%
       setView(lng = -122.40, lat = 37.85, zoom = 9)
   })
   #renders map for main panel in ui using an if function to create map fitting parameters
