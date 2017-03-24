@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(shiny)
+library(shinyjs)
 library(reshape2)
 library(leaflet)
 library(DT)
@@ -30,16 +31,36 @@ gear<- c(
   "20mm"="20mm",
   "Mysid"="Mysid",
   "Mid-Water Trawl"="MWT")
+appCSS <- "
+#loading-content {
+position: absolute;
+background: #000000;
+opacity: 0.9;
+z-index: 100;
+left: 0;
+right: 0;
+height: 100%;
+text-align: center;
+color: #FFFFFF;
+}
+"
+
 
 ####Shiny####
 ##UI building
 ui = bootstrapPage(theme = shinytheme("sandstone"),
-                   navbarPage("Bay Area/Delta Catch Data",
-                  #1st tab
-                   tabPanel("Interactive Map",
-                            tags$style(type = "text/css", "html, body {width:100%;height:90%}"),
-                            tags$style(type = "text/css", "#map {height: calc(100vh - 120px) !important;}"),
-                   leafletOutput("map"),
+                   useShinyjs(),
+                   inlineCSS(appCSS),
+                   div(
+                     id = "loading-content",
+                     h2("Loading...")
+                   ),
+                   hidden(
+                     div(
+                       id = "app-content",
+                   navbarPage("Bay Area/Delta Catch Data"),
+                   tags$style(type = "text/css", "#map {height: calc(100vh - 120px) !important;}"),
+                   leafletOutput("map", height = "100%"),
                    tags$div(id="cite",
                             'Data compiled for ', tags$b('Hobbs Lab Longfin Smelt Survey'), ' by Arthur Barros (2017).'
                    ),
@@ -56,9 +77,13 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                  selectInput("method","Gear Type",gear),
                                  #downloadButton('html_link','Download map'),
                                  submitButton("Submit"))
+                     )
                    )
-))
+)
 server <- function(input, output, session) {
+  # Simulate work being done for 2 second
+  Sys.sleep(5)
+
   ###########Interactive Map##############################################
   #Reactive expression used to filter out by user selected variables for final data "filtered()"
   #for map generation
@@ -124,6 +149,10 @@ server <- function(input, output, session) {
      clearControls%>%
      clearMarkers()%>% myfun()
  })
+ 
+ # Hide the loading message when the rest of the server function has executed
+ hide(id = "loading-content", anim = TRUE, animType = "fade")    
+ show("app-content")
 
 #next call handles the download of the pdf, starts by making an html rmarkdown document 
  output$html_link <- downloadHandler(
