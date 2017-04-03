@@ -154,7 +154,8 @@ server <- function(input, output, session) {
  hide(id = "loading-content", anim = TRUE, animType = "fade")    
  show("app-content")
 
-#next call handles the download of the pdf, starts by making an html rmarkdown document 
+#next call handles the download of the pdf, starts by making an html rmarkdown document
+#This has been deactivated for the time being 4/3/2017
  output$html_link <- downloadHandler(
    filename = 'plot.pdf',
    
