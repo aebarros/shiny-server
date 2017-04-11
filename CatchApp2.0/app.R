@@ -10,8 +10,6 @@ library(reshape2)
 library(leaflet)
 library(DT)
 library(shinythemes)
-library(rmarkdown)
-library(webshot)
 library(rsconnect)
 ##source the global file with all the necessary data
 source("global.R")
@@ -31,32 +29,12 @@ gear<- c(
   "20mm"="20mm",
   "Mysid"="Mysid",
   "Mid-Water Trawl"="MWT")
-appCSS <- "
-#loading-content {
-position: absolute;
-background: #000000;
-opacity: 0.9;
-z-index: 100;
-left: 0;
-right: 0;
-height: 100%;
-text-align: center;
-color: #FFFFFF;
-}
-"
 
 
 ####Shiny####
 ##UI building
 ui = bootstrapPage(theme = shinytheme("sandstone"),
-                   useShinyjs(),
-                   inlineCSS(appCSS),
                    div(
-                     id = "loading-content",
-                     h2("Loading...")
-                   ),
-                   hidden(
-                     div(
                        id = "app-content",
                    navbarPage("Bay Area/Delta Catch Data"),
                    tags$style(type = "text/css", "#map {height: calc(100vh - 120px) !important;}"),
@@ -78,11 +56,8 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                  #downloadButton('html_link','Download map'),
                                  submitButton("Submit"))
                      )
-                   )
 )
 server <- function(input, output, session) {
-  # Simulate work being done for 2 second
-  Sys.sleep(5)
 
   ###########Interactive Map##############################################
   #Reactive expression used to filter out by user selected variables for final data "filtered()"
@@ -149,33 +124,7 @@ server <- function(input, output, session) {
      clearControls%>%
      clearMarkers()%>% myfun()
  })
- 
- # Hide the loading message when the rest of the server function has executed
- hide(id = "loading-content", anim = TRUE, animType = "fade")    
- show("app-content")
-
-#next call handles the download of the pdf, starts by making an html rmarkdown document
-#This has been deactivated for the time being 4/3/2017
- output$html_link <- downloadHandler(
-   filename = 'plot.pdf',
    
-   content = function(file) {
-     src <- normalizePath('mymap.Rmd')
-     
-     # temporarily switch to the temp dir, in case you do not have write
-     # permission to the current working director
-     ##owd <- setwd(tempdir())
-     ##on.exit(setwd(owd)
-     ##############AB:note, had to stop this to allow rmarkdown document to save changes
-     #file.copy(src, 'mymap.Rmd')
-     out <- render('mymap.Rmd',
-                   html_document()
-     )
-     file.rename(out, 'temp.html')
-     #webshot changes the rmarkdown from html to a static pdf
-     webshot("temp.html", file = file, cliprect = "viewport", delay=2)
-   }
- )
     # MW: Stop shiny app when closing the browser
     session$onSessionEnded(stopApp)
 }
