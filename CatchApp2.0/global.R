@@ -18,7 +18,7 @@ head(dataDFW)
 
 #rename columns to match mapapp
 dataDFW<-plyr::rename(dataDFW, c("Polygon.Station"="polystn","Method"="method"))
-head(data)
+head(dataDFW)
 
 ########Connect both data sets
 data.cpue.melt=hobbslab%>%
@@ -30,6 +30,8 @@ data.cpue.melt=data.cpue.melt[order(data.cpue.melt$CommonName),]
 
 #change NA values to 0#
 data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
+#rechange CPUE to numeric
+data.cpue.melt<-transform(data.cpue.melt, CPUE = as.numeric(CPUE))
 
 #average CPUE by month, year and station#
 #####not using this anymore due to changing the date system
@@ -51,5 +53,7 @@ data.cpue.melt$CPUE[is.na(data.cpue.melt$CPUE)]<-0
 
 ###data debugging###
 data.debug=data.cpue.melt%>%
-  filter(Department=="CDFW")
+  filter(method=="SLS")
 head(data.debug)
+
+str(data.cpue.melt)
