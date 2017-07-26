@@ -16,6 +16,10 @@ dataDFW=readRDS("data/dataDFW.rds")
 head(hobbslab)
 head(dataDFW)
 
+#rename columns to match mapapp
+dataDFW<-plyr::rename(dataDFW, c("Polygon.Station"="polystn","Method"="method"))
+head(data)
+
 ########Connect both data sets
 data.cpue.melt=hobbslab%>%
   rbind.fill(hobbslab,dataDFW)

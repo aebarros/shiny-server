@@ -14,13 +14,7 @@ library(rsconnect)
 ##source the global file with all the necessary data
 source("global.R")
 ##set up "water" for the water quality input select for data explorer tab
-water <- c(
-  "Salinity(ppt)" = "BegSurfSalin",
-  "Temperature(°C)" = "BegSurfTemp",
-  "Conductivity(µS)" = "BegSurfCond",
-  "DO%" = "BegSurfDO.",
-  "DO mg/L" = "BegSurfDO.mg.L.")
-##set up "gear" for gear type selection
+
 gear<- c(
   "Large Otter Trawl"="LOT",
   "Small Otter Trawl"="SOT",
@@ -65,11 +59,11 @@ server <- function(input, output, session) {
   filtered<-reactive({
     ifelse(input$agency=="All",filtered.agency<-data.cpue.melt,filtered.agency<-data.cpue.melt[data.cpue.melt$Department==input$agency,])
     filtered.species<- filtered.agency[filtered.agency$CommonName==input$species,]
-    filtered.gear<-filtered.species[filtered.species$Method==input$method,]
+    filtered.gear<-filtered.species[filtered.species$method==input$method,]
     filtered.dates<-filtered.gear[filtered.gear$Date>=input$dates[1] & filtered.gear$Date<=input$dates[2],]
     ##take averages of data in date range
     filtered.dates=filtered.dates%>%
-      group_by_("Polygon.Station","longitude","latitude","CommonName")%>%
+      group_by_("polystn","longitude","latitude","CommonName")%>%
       summarise(CPUE=mean(CPUE,na.rm=TRUE))
     filtered.date <-  filtered.dates %>% mutate(CPUE = replace(CPUE,CPUE==0,NA))
   })
@@ -112,7 +106,7 @@ server <- function(input, output, session) {
                         stroke=TRUE, color="black",weight=2, fillOpacity=1,
                         fillColor=~pal(filtered()$CPUE),
                         popup = ~paste("Catch per Minute Towed:", filtered()$CPUE, "<br>",
-                                       "Station:", Polygon.Station,"<br>",
+                                       "Station:", polystn,"<br>",
                                        "Coordinates:", latitude,",",longitude,"<br>"))%>%
        addLegend("bottomleft", pal=pal, values=filtered()$CPUE, title="Catch Per Minute of Tow",
                  opacity=1)
