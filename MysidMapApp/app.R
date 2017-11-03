@@ -29,7 +29,7 @@ ui = bootstrapPage(theme = shinytheme("sandstone"),
                                    h2("Catch Explorer"),
                                    selectizeInput("species", "Species",
                                                   unique(as.character(data$comname))),
-                                   dateRangeInput("dates","Date range", start="2015-03-01", end="2015-03-31"),
+                                   dateRangeInput("dates","Date range", start="2017-03-01", end="2017-03-31"),
                                    textOutput("DateRange"),
                                    submitButton("Submit"))
                    )
