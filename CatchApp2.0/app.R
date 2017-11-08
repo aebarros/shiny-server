@@ -1,14 +1,8 @@
 ###Load Packages###
 ##always load plyr before dplyr##
-library(plyr)
-library(dplyr)
-library(ggplot2)
-library(lubridate)
 library(shiny)
 library(shinyjs)
-library(reshape2)
 library(leaflet)
-library(DT)
 library(shinythemes)
 library(rsconnect)
 ##source the global file with all the necessary data
@@ -97,7 +91,7 @@ server <- function(input, output, session) {
      pal<-colorBin(
        palette="Reds",
        domain=filtered()$CPUE,
-       bins=c(0,.1,1,10,100,1000),
+       bins=c(.001,.1,1,10,100,1000),
        pretty = TRUE,
        na.color="black")
      
