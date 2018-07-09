@@ -1,0 +1,3 @@
+Notes on droplet problems:
+I had duplicate default servers under cd /etc/nginx/sites-enabled/ (use ls to see items in directory as list form)
+Removed duplicate with rm default save
